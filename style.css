@@ -15,6 +15,10 @@ h5 {
     cursor: pointer;
 }
 
+.clickable {
+    cursor: pointer;
+}
+
 .user-entry {
     background: #ccf;
     margin: 4px;
@@ -44,10 +48,16 @@ h5 {
 
 .chat-user {
     font-size: .93em;
+    background: #ccd;
+    padding: 0px;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-radius: 10px;
 }
 
 .chat-text {
     margin: 0px;
+    margin-top: 2px;
     padding: 2px;
     background: #eef;
     font-family: helvetica, arial;
@@ -63,6 +73,7 @@ h5 {
 
 .highlight .chat-user {
     font-weight: bold;
+    background: #bbf;
 }
 
 .token {

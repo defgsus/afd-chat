@@ -25,7 +25,7 @@ if not os.path.exists("./3098700935.txt"):
 def normalize_name(user):
     for i in ('\u202a', ):
         user = user.replace(i, "")
-    user = " ".join(user.split())
+    user = "".join(user.split())
     return user
 
 NAME_PARTS = ("goa", "bu", "da", "di", "lo",
@@ -35,7 +35,7 @@ USER_MAP = dict()
 def get_user_name(user):
     user = normalize_name(user)
     leng = 2
-    start = 0 if len(user) < 7 else 5
+    start = 0 if len(user) < 7 else 4
     while True:
         leng += 1
         name = "".join(NAME_PARTS[ord(c) % len(NAME_PARTS)] for c in user[start:start+leng])
@@ -88,6 +88,7 @@ with open("./3098700935.txt") as f:
               r"(hat) ([^:]+) (entfernt)",
               r"(hat zu) ([^:]+) (gewechselt)"):
         chattext = re.sub(r, lambda m: ": %s %s %s" % (m.group(1), get_user_name(m.group(2)), m.group(3)), chattext)
+    chattext = re.sub(r"(@4\d*)", lambda m: "@%s" % get_user_name(m.group(0)), chattext)
 
     count_msg = 0
     last_end = -1

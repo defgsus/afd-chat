@@ -17,21 +17,30 @@ for (var i in chat_tokens) {
 
 // location.-hash pseudo-navigation
 
-var oldparams = {};
-
 $(window).on("hashchange", function() {
+    applyNavParams();
+});
+
+var oldparams = {
+    user: -1,
+    msgid: -1,
+    token: -1,
+};
+function applyNavParams() {
     let params = getNavParams();
-    console.log(params);
     if (params.user != oldparams.user || params.token != oldparams.token)
         showFilteredMessages();
-    if (params.user && params.user != oldparams.user) {
-        showTokensByUser(params.user);
+    if (params.user != oldparams.user) {
+        if (params.user)
+            showTokensByUser(params.user);
+        else
+            showTokens(chat_tokens);
     }
     if (params.msgid) {
         scrollToMessage(params.msgid);
     }
     oldparams = params;
-});
+}
 
 function getNavParams() {
     if (!window.location.hash)
@@ -128,7 +137,7 @@ function messageDiv(msg) {
 
 function showMessages(messages, title) {
     var $dom = $("#chat-list");
-    $dom.html(title ? '<h5>'+title+'</h5>' : '');
+    $dom.html('<h5>'+(title ? title : "messages")+'</h5>');
     for (var i in messages) {
         let msg = messages[i];
         $dom.append(messageDiv(msg));
@@ -160,8 +169,11 @@ function filterMessagesByTokenId(messin, id) {
 }
 
 function showFilteredMessages() {
-    console.log("GILDKJHD");
     let params = getNavParams();
+    if (!params.user && !params.token) {
+        showMessages(["..."]);
+        return;
+    }
     var messages = filterMessagesByUser(chat_messages, params.user);
     messages = filterMessagesByTokenId(messages, params.token);
     let orig_length = messages.length;
@@ -200,7 +212,7 @@ function showFilteredMessages() {
 
 function showTokens(tokens, title) {
     var $dom = $("#token-list");
-    $dom.html(title ? '<h5>'+title+'</h5>' : '');
+    $dom.html('<h5>'+(title ? title : "tokens")+'</h5>');
     for (var i in tokens) {
         let tok = tokens[i];
         var html = '<div class="token" data-id="'+tok[0]+'">'
@@ -239,5 +251,6 @@ function showTokensByUser(user) {
 
 $(function() {
     createUserList();
-    showTokens(chat_tokens, "tokens");
+    applyNavParams();
+    //showTokens(chat_tokens, "tokens");
 });
