@@ -1,0 +1,72 @@
+html {
+    font-family: helvetica, arial;
+}
+
+td {
+    vertical-align: top;
+    min-width: 150px;
+}
+
+h5 {
+    margin: 3px;
+}
+
+.user-click {
+    cursor: pointer;
+}
+
+.user-entry {
+    background: #ccf;
+    margin: 4px;
+    padding-left: 4px;
+    padding-right: 4px;
+    cursor: pointer;
+}
+
+.chat-message {
+    background: #ddf;
+    margin-bottom: 4px;
+    padding: 2px;
+}
+
+.chat-date {
+    font-size: .8em;
+}
+
+.chat-user {
+    font-size: .93em;
+}
+
+.chat-text {
+    margin: 0px;
+    padding: 2px;
+    background: #eef;
+    font-family: helvetica, arial;
+}
+
+.highlight .chat-message {
+    background: #bbf;
+}
+
+.highlight .chat-text {
+    background: #ccf;
+}
+
+.highlight .chat-user {
+    font-weight: bold;
+}
+
+.token {
+    max-width: 200px;
+    background: #cdf;
+    padding: 0px;
+    padding-left: 3px;
+    padding-right: 3px;
+    margin-bottom: 2px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.right {
+    float: right;
+}
