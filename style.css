@@ -23,6 +23,15 @@ h5 {
     cursor: pointer;
 }
 
+.chat-separator {
+    text-align: center;
+    background: #f8f8f8;
+    border-radius: 10px;
+    padding: 1px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
 .chat-message {
     background: #ddf;
     margin-bottom: 4px;
