@@ -1,17 +1,5 @@
 # python 3+
-"""
-05.02.17, 11:15:08: ‪+49 1577 3250282‬: Grüß dich Uwe😉
-05.02.17, 11:15:49: ‪+49 173 3990034‬: Das sind Worte, welche gestützt gehören ...
-05.02.17, 11:15:59: ‪+49 173 3274732‬: Zu Niedersachsen:
-Der "umstrittene Landesvorsitzende" bekommt bei der Wahl 85% der Stimmen.
-Da stellt sich mir die Frage, von welcher Seite die Streitigkeiten im LV Niedersachsen medial derart befeuert wurden, wenn das Ergebnis solch deutliche Sprache spricht.
-Warum nur sehe ich in der Außenwirkung beider Landesverbände klare Parallelen?
-05.02.17, 11:16:15: ‪+49 173 3990034‬: Burgfrieden!
-05.02.17, 11:16:41: ‪+49 171 9955502‬: Hallo Daniel, schön das du hier bist und Arno danke ich ausdrücklich für das Wort zum Sonntag!
-05.02.17, 11:16:42: ‪+49 173 3990034‬: 👍🏻
-05.02.17, 11:18:25: ‪+49 1522 2380886‬: Das ist richtig.
-05.02.17, 11:18:59: ‪+49 173 3990034‬: In alle Richtungen
-"""
+
 import os
 import re
 import json
@@ -54,9 +42,10 @@ tokens = dict()
 tokens_by_user = dict()
 
 def split_tokens(msg):
+    msg = msg.lower()
     for p in (",", ".", "?", "!", "/", ";"):
         msg = msg.replace(p, " %s " % p)
-    return [x.lower() for x in msg.split()]
+    return [x for x in msg.split() if x not in ignore_tokens]
 
 def gather_tokens(msg):
     for tok in split_tokens(msg):
@@ -76,6 +65,9 @@ def count_tokens(msg, store):
             else:
                 store[tok] = [tokens[tok][0], 1]
 
+with open("./ignore_tokens.json") as f:
+    ignore_tokens = json.load(f)
+    ignore_tokens = set(ignore_tokens)
 
 with open("./3098700935.txt") as f:
     chattext = f.read()
@@ -146,7 +138,7 @@ for c in chat:
 tokens_by_user = {user: sorted(tokens_by_user[user].values(), key=lambda t: -t[1])[:500] for user in tokens_by_user}
 tokens = sorted(tokens.values(), key=lambda t: -t[2])[:1000]
 
-with open("afd-chat.js", "wt") as f:
+with open("../afd-chat.js", "wt") as f:
     f.write("""
     var chat = %s;
     var chat_tokens = %s;

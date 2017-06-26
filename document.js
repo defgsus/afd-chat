@@ -37,7 +37,7 @@ function applyNavParams() {
             showTokens(chat_tokens);
     }
     if (params.msgid) {
-        scrollToMessage(params.msgid);
+        setTimeout(function() { scrollToMessage(params.msgid); }, 200);
     }
     oldparams = params;
 }
@@ -80,12 +80,12 @@ function setTokenFilter(id) {
 function scrollToMessage(id) {
     let $elem = $('.chat-message[data-msg-id="'+id+'"]');
     if ($elem)
-        window.scrollTo({top: findElementPos($elem[0])});
+        window.scrollTo(0, findElementPos($elem[0]));
 }
 
 function findElementPos(obj) {
     var curtop = 0;
-    if (obj.offsetParent) {
+    if (obj && obj.offsetParent) {
         do {
             curtop += obj.offsetTop;
         } while (obj = obj.offsetParent);
