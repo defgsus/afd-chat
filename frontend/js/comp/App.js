@@ -4,10 +4,11 @@ require('style.css');
 
 import TokenListFiltered from './TokenListFiltered'
 import MessageList from './MessageList'
-import { setMessageTokenFilter } from '../actions'
+import UserList from './UserList'
+import { setMessageTokenFilter, setMessageUserFilter } from '../actions'
 
 
-const App = ({ onTokenClick }) => {
+const App = ({ onTokenClick, onUserClick }) => {
 
     return (
         <div>
@@ -16,14 +17,11 @@ const App = ({ onTokenClick }) => {
             &nbsp;| <a href="http://www.spiegel.de/netzwelt/web/afd-leaks-psychogramm-einer-partei-im-sinkflug-kolumne-a-1153365.html">lobo</a>
 
             <h3 className="clickable">AFD - Chat Protokoll</h3>
-            <table>
-                <tbody>
-                    <tr>
-                        <td> <TokenListFiltered onTokenClick={onTokenClick} /> </td>
-                        <td> <MessageList onMessageClick={id => console.log("message", id)} /> </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div id="page-modules">
+                <UserList onUserClick={onUserClick} />
+                <TokenListFiltered onTokenClick={onTokenClick} />
+                <MessageList onMessageClick={id => console.log("message", id)} />
+            </div>
         </div>
     );
 }
@@ -37,7 +35,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-    onTokenClick: id => { dispatch(setMessageTokenFilter(id)) }
+    onTokenClick: id => { dispatch(setMessageTokenFilter(id)) },
+    onUserClick: id => { dispatch(setMessageUserFilter(id)) }
 })
 
 export default connect(

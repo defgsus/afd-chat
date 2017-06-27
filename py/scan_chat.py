@@ -139,22 +139,27 @@ for c in chat:
 ## export
 
 tokens_by_user = {user: sorted(tokens_by_user[user].values(), key=lambda t: -t["count"])[:500] for user in tokens_by_user}
-tokens = sorted(tokens.values(), key=lambda t: -t["count"])[:2000]
+tokens = sorted(tokens.values(), key=lambda t: -t["count"])#[:2000]
 
 if 1:
     with open("../frontend/js/chat-messages.js", "wt") as f:
         f.write("""
         export const chat_messages = %s;
+        export const chat_users = %s; 
         """ % (
-            json.dumps(chat[:200]),
+            json.dumps(chat),
+            json.dumps(sorted([(user, len(chat_by_user[user])) for user in chat_by_user], key=lambda x: -x[1])),
         ))
 
 if 1:
     with open("../frontend/js/chat-tokens.js", "wt") as f:
         f.write("""
+        export function idToToken(id) { return (id in id_to_token_map) ? id_to_token_map[id] : null }
         export const chat_tokens = %s;
+        export const id_to_token_map = %s;
         //export const chat_tokens_by_user = ;
         """ % (
             json.dumps(tokens),
+            json.dumps({t["id"]: t["name"] for t in tokens}),
             #json.dumps(tokens_by_user),
         ))

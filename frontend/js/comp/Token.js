@@ -4,7 +4,6 @@ import PropTypes from 'prop-types'
 const Token = ({ onClick, token }) => (
     <div
         className="token clickable"
-        data-token-id={token.id}
         onClick={() => onClick && onClick(token.id)}
     >
         {token.name}

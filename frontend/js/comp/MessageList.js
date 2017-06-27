@@ -6,11 +6,20 @@ import { messagePropTypes } from './Message'
 import { setNumMessageContext, setMessageOffset } from '../actions'
 
 import { chat_messages } from '../chat-messages'
+import { idToToken } from '../chat-tokens'
 
 
 const MessageList = ({
-    messages, onMessageClick, onNumContextChange, onOffsetChange, tokenFilter, userFilter,
+    messages, numMessages, onMessageClick, onNumContextChange, onOffsetChange, tokenFilter, userFilter,
     highlights, numMessageContext, offset, perPage }) => {
+    const doShowContextInput = (tokenFilter || userFilter) && numMessages > 0;
+    let token = idToToken(tokenFilter);
+    var title = numMessages + " messages";
+    if (userFilter)
+        title += " by user '"+userFilter+"'";
+    if (tokenFilter)
+        title += " containing '"+token+"'";
+    //title += " offset="+offset;
     return (
         <div className="message-list" onWheel={(e)=>{
             e.preventDefault();
@@ -18,14 +27,17 @@ const MessageList = ({
             if (onOffsetChange)
                 onOffsetChange(e.deltaY > 0 ? offset+1 : offset-1)
         }} >
-            <h5>{"messages by token '"+tokenFilter+"' by user '"+userFilter+"' offset="+offset}</h5>
-            <div>
-                <input type="number" value={numMessageContext} onChange={(e) => {
-                    if (onNumContextChange)
-                        onNumContextChange(e.target.value);
+            <h5>{title}</h5>
+            { doShowContextInput && (<div>
+                <label htmlFor="num-context-input">number messages in context</label>
+                <input id="num-context-input" type="number" className="number-input"
+                    value={numMessageContext} onChange={(e) => {
+                        if (onNumContextChange)
+                            onNumContextChange(e.target.value);
                 }}/>
-
-            </div>
+            </div>) }
+            { offset > 0 && <div className="button"
+                onClick={() => { if (onOffsetChange) onOffsetChange(offset-perPage+1) }}>▲</div> }
             <div>
                 {messages.map((msg, i) => {
                     if (typeof(msg) == "string")
@@ -41,6 +53,8 @@ const MessageList = ({
                     );
                 })}
             </div>
+            { offset+perPage < numMessages && <div className="button"
+                onClick={() => { if (onOffsetChange) onOffsetChange(offset+perPage-1) }}>▼</div> }
         </div>
     )
 }
@@ -54,6 +68,7 @@ MessageList.propTypes = {
             )
         ])
     ).isRequired,
+    numMessages: PropTypes.number,
     onMessageClick: PropTypes.func,
     tokenFilter: PropTypes.number,
     userFilter: PropTypes.string,
@@ -75,12 +90,17 @@ const filterChatMessagesByUser = (messages, user) => {
 }
 
 const expandMessages = (messages, num=3) => {
+    num = Math.max(0, num);
+    if (!num)
+        return messages;
     var ret = {};
     var last_id = 0;
     for (let i in messages) {
         let msg = messages[i];
         if (msg[0] > last_id+1) {
             for (var j=Math.max(0, msg[0]-num); j < msg[0]; ++j)
+                ret[j] = chat_messages[j];
+            for (var j=msg[0]+1; j < Math.min(chat_messages.length, msg[0]+num+1); ++j)
                 ret[j] = chat_messages[j];
         }
         ret[msg[0]] = msg;
@@ -95,23 +115,45 @@ const expandMessages = (messages, num=3) => {
         retl.push(msg);
         last_id = msg[0];
     }
+    if (retl.length && chat_messages.length > last_id+1)
+        retl.push("...");
     return retl;
 }
 
+
+var cache = {
+    messages: [],
+    highlights: new Set(),
+    tokenFilter: null,
+    userFilter: null,
+    numContext: -1,
+}
 
 const mapStateToProps = (state) => {
     let perPage = state.perPage || 10;
     let tokenFilter = state.messageTokenFilter || 0;
     let userFilter = state.messageUserFilter || "";
-    var messages = filterChatMessagesByTokenId(filterChatMessagesByUser(chat_messages, userFilter), tokenFilter);
-    var highlights = new Set();
-    if ((tokenFilter || userFilter) && state.numMessageContext > 0)
-        for (var i in messages)
-            highlights.add(messages[i][0]);
-    var messages = expandMessages(messages, state.numMessageContext);
+    var messages = cache.messages;
+    var highlights = cache.highlights;
+    if (userFilter != cache.userFilter
+    || tokenFilter != cache.tokenFilter
+    || state.numMessageContext != cache.numContext) {
+        messages = filterChatMessagesByTokenId(filterChatMessagesByUser(chat_messages, userFilter), tokenFilter);
+        highlights = new Set();
+        if ((tokenFilter || userFilter) && state.numMessageContext > 0)
+            for (var i in messages)
+                highlights.add(messages[i][0]);
+        var messages = expandMessages(messages, state.numMessageContext);
+        cache.messages = messages;
+        cache.highlights = highlights;
+        cache.tokenFilter = tokenFilter;
+        cache.userFilter = userFilter;
+        cache.numContext = state.numMessageContext;
+    }
     let offset = Math.max(0, Math.min(messages.length - perPage, state.messageOffset || 0));
     return {
         messages: messages.slice(offset, offset + perPage),
+        numMessages: messages.length,
         tokenFilter: tokenFilter,
         userFilter: userFilter,
         offset: offset,
