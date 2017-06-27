@@ -2,9 +2,8 @@ import React from 'react'
 
 require('style.css');
 
-import TokenList from './TokenList'
+import TokenListFiltered from './TokenListFiltered'
 
-import { chat_tokens } from '../chat-tokens'
 
 
 class App extends React.Component {
@@ -21,8 +20,7 @@ class App extends React.Component {
                 &nbsp;| <a href="http://www.spiegel.de/netzwelt/web/afd-leaks-psychogramm-einer-partei-im-sinkflug-kolumne-a-1153365.html">lobo</a>
 
                 <h3 className="clickable">AFD - Chat Protokoll</h3>
-
-                <TokenList tokens={chat_tokens} onTokenClick={id => console.log(id)}/>
+                <TokenListFiltered onTokenClick={id => console.log(id)}/>
             </div>
         );
     }

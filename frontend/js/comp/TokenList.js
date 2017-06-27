@@ -4,11 +4,11 @@ import Token from './Token'
 
 
 const TokenList = ({ tokens, onTokenClick }) => (
-    <ul>
+    <div>
         {tokens.map(tok => (
             <Token key={tok.id} token={tok} onClick={() => onTokenClick && onTokenClick(tok.id)} />
         ))}
-    </ul>
+    </div>
 )
 
 TokenList.propTypes = {

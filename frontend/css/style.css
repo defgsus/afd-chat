@@ -87,6 +87,13 @@ h5 {
     cursor: pointer;
 }
 
+.filter-input {
+    min-width: 206px;
+    margin-top: 2px;
+    margin-bottom: 4px;
+    border-radius: 5px;
+}
+
 .right {
     float: right;
 }

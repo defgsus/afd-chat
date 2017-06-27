@@ -8,10 +8,11 @@ const Token = ({ onClick, token }) => (
         onClick={() => onClick && onClick(token.id)}
     >
         {token.name}
+        <div className="right">{token.count}</div>
     </div>
 )
 
-Token.propTypes = {
+export const tokenPropTypes = {
     onClick: PropTypes.func,
     token: PropTypes.shape({
         id: PropTypes.number.isRequired,
@@ -19,5 +20,6 @@ Token.propTypes = {
     }).isRequired,
 };
 
+Token.propTypes = tokenPropTypes;
 
 export default Token;
