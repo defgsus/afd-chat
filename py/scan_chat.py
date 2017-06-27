@@ -1,5 +1,8 @@
 # python 3+
 
+# schlüpfer: https://defgsus.github.io/afd-chat/#user=Numesako&msgid=3817
+# bogus link: file:///home/defgsus/prog/python/fun/afd-chat/index.html#user=Ramesa&msgid=8352&
+
 import os
 import re
 import json
@@ -50,20 +53,20 @@ def split_tokens(msg):
 def gather_tokens(msg):
     for tok in split_tokens(msg):
         if tok in tokens:
-            tokens[tok][2] += 1
+            tokens[tok]["count"] += 1
         else:
-            tokens[tok] = [len(tokens), tok, 1]
+            tokens[tok] = {"id": len(tokens), "name": tok, "count": 1}
 
 def to_token_ids(msg):
-    return [tokens[tok][0] for tok in split_tokens(msg) if tok in tokens]
+    return [tokens[tok]["id"] for tok in split_tokens(msg) if tok in tokens]
 
 def count_tokens(msg, store):
     for tok in split_tokens(msg):
         if tok in tokens:
             if tok in store:
-                store[tok][1] += 1
+                store[tok]["count"] += 1
             else:
-                store[tok] = [tokens[tok][0], 1]
+                store[tok] = {"id": tokens[tok]["id"], "name": tok, "count": 1}
 
 with open("./ignore_tokens.json") as f:
     ignore_tokens = json.load(f)
@@ -135,16 +138,27 @@ for c in chat:
 
 ## export
 
-tokens_by_user = {user: sorted(tokens_by_user[user].values(), key=lambda t: -t[1])[:500] for user in tokens_by_user}
-tokens = sorted(tokens.values(), key=lambda t: -t[2])[:1000]
+tokens_by_user = {user: sorted(tokens_by_user[user].values(), key=lambda t: -t["count"])[:500] for user in tokens_by_user}
+tokens = sorted(tokens.values(), key=lambda t: -t["count"])[:1000]
 
-with open("../afd-chat.js", "wt") as f:
-    f.write("""
-    var chat = %s;
-    var chat_tokens = %s;
-    var chat_tokens_by_user = %s;
-    """ % (
-        json.dumps(chat_by_user),
-        json.dumps(tokens),
-        json.dumps(tokens_by_user),
-    ))
+if 0:
+    with open("../afd-chat.js", "wt") as f:
+        f.write("""
+        var chat = %s;
+        var chat_tokens = %s;
+        var chat_tokens_by_user = %s;
+        """ % (
+            json.dumps(chat_by_user),
+            json.dumps(tokens),
+            json.dumps(tokens_by_user),
+        ))
+
+if 1:
+    with open("../frontend/js/chat-tokens.js", "wt") as f:
+        f.write("""
+        export const chat_tokens = %s;
+        export const chat_tokens_by_user = %s;
+        """ % (
+            json.dumps(tokens),
+            json.dumps(tokens_by_user),
+        ))

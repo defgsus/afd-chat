@@ -122,6 +122,9 @@ function createUserList() {
 function messageDiv(msg) {
     if (typeof(msg) == "string")
         return '<div class="chat-separator">' + msg + '</div>';
+    if (msg.length == 2)
+        return '<div class="chat-separator clickable"'
+             + ' onClick="expandMessages('+msg[1]+');">' + msg[0] + '</div>';
     var html
          = //'<a name="msg-'+msg[0]+'">'
            '<div class="chat-message" data-msg-id="'+msg[0]+'">'
@@ -143,6 +146,26 @@ function showMessages(messages, title) {
         $dom.append(messageDiv(msg));
     }
     hookUserClick();
+}
+
+function expandMessages(id) {
+    console.log("EXPAND", id);
+    var $omsg = $('.chat-message[data-msg-id="'+id+'"]');
+    if (!$omsg)
+        return;
+    for (var i=1; i<5; ++i) {
+        var msgid = [id+i, id-1];
+        for (let j in msgid) {
+            var mid = msgid[j];
+            var $msg = $('.chat-message[data-msg-id="'+mid+'"]');
+            if (!$msg) {
+                if (mid < id)
+                    $omsg.prepend(messageDiv(chat_messages[mid]));
+                else
+                    $omsg.append(messageDiv(chat_messages[mid]));
+            }
+        }
+    }
 }
 
 function filterMessagesByUser(messin, user) {
@@ -197,7 +220,7 @@ function showFilteredMessages() {
     var last_id = 0;
     for (var i in filtmessages) {
         if (filtmessages[i][0] > last_id + 1)
-            messages.push("...")
+            messages.push(["...", filtmessages[i][0]]);
         last_id = filtmessages[i][0];
         messages.push(filtmessages[i]);
     }

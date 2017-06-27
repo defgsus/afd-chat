@@ -1,5 +1,9 @@
 .idea/
+node_modules/
+static/
 3098700935.txt
+chat-tokens.js
+chat-messages.js
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
