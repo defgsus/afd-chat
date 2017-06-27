@@ -5,10 +5,11 @@ import { chat_tokens } from '../chat-tokens'
 import { setTokenFilter } from '../actions'
 
 
-const TokenListFiltered = ({ tokens, tokenFilter, onFilterChange }) => (
+const TokenListFiltered = ({ tokens, tokenFilter, onFilterChange, onTokenClick }) => (
     <div className="token-list">
-        <input type="text" className="filter-input" placeholder="filter" value={tokenFilter} onChange={(e) => onFilterChange(e.target.value) }/>
-        <TokenList tokens={tokens} />
+        <input type="text" className="filter-input" placeholder="filter" value={tokenFilter}
+               onChange={(e) => onFilterChange(e.target.value) }/>
+        <TokenList tokens={tokens} onTokenClick={onTokenClick} />
     </div>
 )
 
@@ -20,7 +21,8 @@ TokenListFiltered.propTypes = {
         }).isRequired
     ).isRequired,
     tokenFilter: PropTypes.string,
-    onFilterChange: PropTypes.func
+    onFilterChange: PropTypes.func,
+    onTokenClick: PropTypes.func
 }
 
 

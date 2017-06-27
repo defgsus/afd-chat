@@ -139,26 +139,22 @@ for c in chat:
 ## export
 
 tokens_by_user = {user: sorted(tokens_by_user[user].values(), key=lambda t: -t["count"])[:500] for user in tokens_by_user}
-tokens = sorted(tokens.values(), key=lambda t: -t["count"])[:1000]
+tokens = sorted(tokens.values(), key=lambda t: -t["count"])[:2000]
 
-if 0:
-    with open("../afd-chat.js", "wt") as f:
+if 1:
+    with open("../frontend/js/chat-messages.js", "wt") as f:
         f.write("""
-        var chat = %s;
-        var chat_tokens = %s;
-        var chat_tokens_by_user = %s;
+        export const chat_messages = %s;
         """ % (
-            json.dumps(chat_by_user),
-            json.dumps(tokens),
-            json.dumps(tokens_by_user),
+            json.dumps(chat[:200]),
         ))
 
 if 1:
     with open("../frontend/js/chat-tokens.js", "wt") as f:
         f.write("""
         export const chat_tokens = %s;
-        export const chat_tokens_by_user = %s;
+        //export const chat_tokens_by_user = ;
         """ % (
             json.dumps(tokens),
-            json.dumps(tokens_by_user),
+            #json.dumps(tokens_by_user),
         ))
