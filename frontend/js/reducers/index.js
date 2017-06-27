@@ -4,7 +4,9 @@ import { combineReducers } from 'redux'
 import {
     SET_TOKEN_FILTER,
     SET_MESSAGE_TOKEN_FILTER,
-    SET_MESSAGE_USER_FILTER
+    SET_MESSAGE_USER_FILTER,
+    SET_MESSAGE_OFFSET,
+    SET_NUM_MESSAGE_CONTEXT
  } from '../actions'
 
 
@@ -27,9 +29,27 @@ const messageTokenFilter = (state = 0, action) => {
 };
 
 const messageUserFilter = (state = '', action) => {
-    console.log(action);
+    //console.log(action);
     switch (action.type) {
         case SET_MESSAGE_USER_FILTER:
+            return action.value
+        default:
+            return state
+    }
+};
+
+const messageOffset = (state = 0, action) => {
+    switch (action.type) {
+        case SET_MESSAGE_OFFSET:
+            return action.value
+        default:
+            return state
+    }
+};
+
+const numMessageContext = (state = 3, action) => {
+    switch (action.type) {
+        case SET_NUM_MESSAGE_CONTEXT:
             return action.value
         default:
             return state
@@ -39,7 +59,9 @@ const messageUserFilter = (state = '', action) => {
 const appReducer = combineReducers({
     tokenFilter,
     messageTokenFilter,
-    messageUserFilter
+    messageUserFilter,
+    messageOffset,
+    numMessageContext
 });
 
 export default appReducer

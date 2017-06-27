@@ -35,7 +35,7 @@ const getVisibleTokens = (tokens, filter) => {
 }
 
 const mapStateToProps = state => ({
-    tokens: getVisibleTokens(chat_tokens, state.tokenFilter),
+    tokens: getVisibleTokens(chat_tokens, state.tokenFilter).slice(0, 300),
     tokenFilter: state.tokenFilter
 })
 
