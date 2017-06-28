@@ -18,7 +18,10 @@ const UserList = ({
             if (onOffsetChange)
                 onOffsetChange(offset+Math.max(-10,Math.min(10, e.deltaY*.1)));
         }} >
-            <h5>{title}</h5>
+            <div className="list-header">
+                <h5>{title}</h5>
+                <div className="button" disabled={!selectedUser || selectedUser==""} onClick={() => { onUserClick(""); }}>x</div>
+            </div>
             <div className="button" disabled={offset==0}
                 onClick={() => { if (onOffsetChange) onOffsetChange(offset-perPage+1) }}>▲</div>
             <div>

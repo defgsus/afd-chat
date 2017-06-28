@@ -10,7 +10,10 @@ const TokenListFiltered = ({
             tokens, tokenFilter, onFilterChange, onTokenClick, onOffsetChange,
             offset, perPage, numTokens, selectedToken }) => (
     <div className="token-list">
-        <h5>{numTokens} tokens</h5>
+        <div className="list-header">
+            <h5>{numTokens} tokens</h5>
+            <div className="button" disabled={!selectedToken} onClick={() => { onTokenClick(0); }}>x</div>
+        </div>
         <input type="text" className="filter-input" placeholder="filter" value={tokenFilter}
                onChange={(e) => onFilterChange(e.target.value) }/>
         <div className="button" disabled={offset==0}

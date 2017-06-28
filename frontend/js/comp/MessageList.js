@@ -10,11 +10,11 @@ import { idToToken } from '../chat-tokens'
 
 
 const MessageList = ({
-    messages, numMessages, onMessageClick, onNumContextChange, onOffsetChange, tokenFilter, userFilter,
+    messages, numMessages, numMatchingMessages, onMessageClick, onNumContextChange, onOffsetChange, tokenFilter, userFilter,
     highlights, numMessageContext, offset, perPage }) => {
     const doShowContextInput = (tokenFilter || userFilter) && numMessages > 0;
     let token = idToToken(tokenFilter);
-    var title = numMessages + " messages";
+    var title = numMatchingMessages + " messages";
     if (userFilter)
         title += " by user '"+userFilter+"'";
     if (tokenFilter)
@@ -69,6 +69,7 @@ MessageList.propTypes = {
         ])
     ).isRequired,
     numMessages: PropTypes.number,
+    numMatchingMessages: PropTypes.number,
     onMessageClick: PropTypes.func,
     tokenFilter: PropTypes.number,
     userFilter: PropTypes.string,
@@ -127,6 +128,7 @@ var cache = {
     tokenFilter: null,
     userFilter: null,
     numContext: -1,
+    numMatchingMessages: 0
 }
 
 const mapStateToProps = (state) => {
@@ -143,7 +145,8 @@ const mapStateToProps = (state) => {
         if ((tokenFilter || userFilter) && state.numMessageContext > 0)
             for (var i in messages)
                 highlights.add(messages[i][0]);
-        var messages = expandMessages(messages, state.numMessageContext);
+        cache.numMatchingMessages = messages.length;
+        messages = expandMessages(messages, state.numMessageContext);
         cache.messages = messages;
         cache.highlights = highlights;
         cache.tokenFilter = tokenFilter;
@@ -154,6 +157,7 @@ const mapStateToProps = (state) => {
     return {
         messages: messages.slice(offset, offset + perPage),
         numMessages: messages.length,
+        numMatchingMessages: cache.numMatchingMessages,
         tokenFilter: tokenFilter,
         userFilter: userFilter,
         offset: offset,

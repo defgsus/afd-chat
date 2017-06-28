@@ -142,7 +142,7 @@ tokens_by_user = {user: sorted(tokens_by_user[user].values(), key=lambda t: -t["
 tokens = sorted(tokens.values(), key=lambda t: -t["count"])
 
 # limit data for development - webpack build takes forever...
-if 1:
+if 0:
     tokens = tokens[:2000]
     chat = chat[:300]
 

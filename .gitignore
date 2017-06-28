@@ -1,6 +1,6 @@
 .idea/
 node_modules/
-static/
+static/*.map
 3098700935.txt
 chat-tokens.js
 chat-messages.js
