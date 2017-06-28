@@ -1,13 +1,14 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import InfoField from './InfoField'
 import { chat_tokens } from '../chat-tokens'
 import { setTokenFilter, setTokenOffset } from '../actions'
 
 
 const TokenListFiltered = ({
             tokens, tokenFilter, onFilterChange, onTokenClick, onOffsetChange,
-            offset, perPage, numTokens }) => (
+            offset, perPage, numTokens, selectedToken }) => (
     <div className="token-list">
         <h5>{numTokens} tokens</h5>
         <input type="text" className="filter-input" placeholder="filter" value={tokenFilter}
@@ -20,7 +21,16 @@ const TokenListFiltered = ({
             if (onOffsetChange)
                 onOffsetChange(offset+Math.max(-10,Math.min(10, e.deltaY*.1)));
         }}>
-            <TokenList tokens={tokens} onTokenClick={onTokenClick} />
+            {tokens.map(tok => (
+                <InfoField
+                    key={tok.id}
+                    className="token"
+                    onClick={onTokenClick}
+                    clickValue={tok.id}
+                    selected={selectedToken == tok.id}
+                    values={[tok.name, tok.count]}
+                    />
+            ))}
         </div>
         <div className="button" disabled={offset+perPage >= numTokens}
              onClick={() => { if (onOffsetChange) onOffsetChange(offset+perPage-1) }}>▼</div>
@@ -41,8 +51,8 @@ TokenListFiltered.propTypes = {
     offset: PropTypes.number.isRequired,
     perPage: PropTypes.number.isRequired,
     numTokens: PropTypes.number.isRequired,
+    selectedToken: PropTypes.number
 }
-
 
 
 
@@ -61,7 +71,8 @@ const mapStateToProps = state => {
         tokenFilter: state.tokenFilter,
         offset: offset,
         perPage: perPage,
-        numTokens: tokens.length
+        numTokens: tokens.length,
+        selectedToken: state.messageTokenFilter
     }
 }
 
@@ -71,7 +82,6 @@ const mapDispatchToProps = dispatch => ({
 })
 
 import { connect } from 'react-redux'
-import TokenList from './TokenList'
 
 export default connect(
     mapStateToProps,

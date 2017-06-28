@@ -36,14 +36,33 @@ h5 {
     cursor: pointer;
 }
 
-.user-entry {
-    background: #ccf;
+.info-field {
+    display: flex;
+    justify-content: space-between;
     padding: 0px;
     padding-left: 3px;
     padding-right: 3px;
     margin-bottom: 2px;
     border-radius: 5px;
 }
+
+.info-field-selected {
+    border: #77a solid 1px;
+    border: #77a solid 1px;
+    margin: 1px;
+}
+
+.info-field-item {
+
+}
+
+.user-entry             { background: #ccf; }
+.user-entry:hover       { background: #ddf; }
+.user-entry-selected    { background: #aac; }
+
+.token                  { background: #cdf; }
+.token:hover            { background: #def; }
+.token-selected         { background: #abc; }
 
 .chat-separator {
     text-align: center;
@@ -73,6 +92,10 @@ h5 {
     border-radius: 10px;
 }
 
+.chat-user:hover {
+    background: #d8d8f8;
+}
+
 .chat-text {
     margin: 0px;
     margin-top: 2px;
@@ -94,16 +117,6 @@ h5 {
     background: #bbf;
 }
 
-.token {
-    max-width: 200px;
-    background: #cdf;
-    padding: 0px;
-    padding-left: 3px;
-    padding-right: 3px;
-    margin-bottom: 2px;
-    border-radius: 5px;
-    cursor: pointer;
-}
 
 .filter-input {
     width: 100%;

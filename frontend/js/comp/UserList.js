@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import User from './User'
+import InfoField from './InfoField'
 
 import { setUserOffset } from '../actions'
 
@@ -8,7 +8,8 @@ import { chat_users } from '../chat-messages'
 
 
 const UserList = ({
-    users, numUsers, onUserClick, onOffsetChange, offset, perPage }) => {
+        users, numUsers, onUserClick, onOffsetChange, offset, perPage, selectedUser
+                }) => {
     var title = numUsers+" users";
     return (
         <div className="user-list" onWheel={(e)=>{
@@ -22,9 +23,13 @@ const UserList = ({
                 onClick={() => { if (onOffsetChange) onOffsetChange(offset-perPage+1) }}>▲</div>
             <div>
                 {users.map(user => (
-                    <User key={user} onClick={onUserClick}
-                        user={user[0]}
-                        count={user[1]}
+                    <InfoField
+                            key={user}
+                            className="user-entry"
+                            onClick={selectedUser != user[0] ? onUserClick : null}
+                            clickValue={user[0]}
+                            selected={selectedUser == user[0]}
+                            values={user}
                     />
                 ))}
             </div>
@@ -40,6 +45,7 @@ UserList.propTypes = {
     onUserClick: PropTypes.func,
     offset: PropTypes.number.isRequired,
     perPage: PropTypes.number.isRequired,
+    selectedUser: PropTypes.string
 }
 
 
@@ -52,6 +58,7 @@ const mapStateToProps = (state) => {
         numUsers: users.length,
         offset: offset,
         perPage: perPage,
+        selectedUser: state.messageUserFilter
     };
 }
 

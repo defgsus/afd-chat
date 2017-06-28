@@ -139,7 +139,12 @@ for c in chat:
 ## export
 
 tokens_by_user = {user: sorted(tokens_by_user[user].values(), key=lambda t: -t["count"])[:500] for user in tokens_by_user}
-tokens = sorted(tokens.values(), key=lambda t: -t["count"])#[:2000]
+tokens = sorted(tokens.values(), key=lambda t: -t["count"])
+
+# limit data for development - webpack build takes forever...
+if 1:
+    tokens = tokens[:2000]
+    chat = chat[:300]
 
 if 1:
     with open("../frontend/js/chat-messages.js", "wt") as f:

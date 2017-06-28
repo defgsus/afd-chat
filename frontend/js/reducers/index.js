@@ -49,7 +49,7 @@ const messageOffset = (state = 0, action) => {
     }
 };
 
-const numMessageContext = (state = 3, action) => {
+const numMessageContext = (state = 0, action) => {
     switch (action.type) {
         case SET_NUM_MESSAGE_CONTEXT:
             return action.value
